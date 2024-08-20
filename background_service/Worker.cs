@@ -1,6 +1,6 @@
 namespace background_service
 {
-    public class Worker : BackgroundService
+    public class Worker : BackgroundService, IDisposable
     {
         private readonly ILogger<Worker> _logger;
 
@@ -21,6 +21,13 @@ namespace background_service
             //    }
             //    await Task.Delay(1000, stoppingToken);
             //}
+        }
+
+        public override void Dispose()
+        {
+            _logger.LogInformation("Worker disposed");
+
+            base.Dispose();
         }
     }
 }

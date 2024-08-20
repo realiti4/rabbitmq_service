@@ -31,7 +31,8 @@ namespace background_service
         {
             var factory = new ConnectionFactory
             {
-                HostName = "localhost",
+                HostName = "127.0.0.1",
+                //HostName = "host.docker.internal",    // For local docker development
                 Port = 5672,
             };
 
@@ -67,7 +68,7 @@ namespace background_service
                     if (messageData == null)
                     {
                         _logger.LogError("Message data is null");
-                        _channel.BasicReject(ea.DeliveryTag, requeue: true);
+                        _channel.BasicReject(ea.DeliveryTag, requeue: false);
                         return;
                     }
 
