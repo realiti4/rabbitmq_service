@@ -31,8 +31,9 @@ namespace background_service
         {
             var factory = new ConnectionFactory
             {
-                HostName = "127.0.0.1",
+                //HostName = "127.0.0.1",
                 //HostName = "host.docker.internal",    // For local docker development
+                HostName = "rabbitmq",    // Docker network
                 Port = 5672,
             };
 

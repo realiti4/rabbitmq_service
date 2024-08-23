@@ -1,0 +1,13 @@
+﻿services:
+  background-service:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    image: background-service:latest
+    container_name: background-service
+    networks:
+        - rabbit_network
+
+networks:
+  rabbit_network:
+    external: true
