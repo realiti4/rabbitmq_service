@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using background_service.Models;
 
+// Auth
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 namespace background_service.Controllers
 {
     [Route("api/[controller]")]
@@ -135,6 +141,61 @@ namespace background_service.Controllers
         public string Get2()
         {
             return "Hello World from get2!";
+        }
+    }
+
+    // Auth controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IConfiguration _config;
+        private readonly Int32 _token_expiration = 30;
+
+        public AuthController(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            // Validate user
+            if (is_valid_user(username, password))
+            {
+                // Create token
+                var token = generate_token(username);
+
+                return Ok(new { token });
+            }
+
+            return Unauthorized();
+        }
+
+        private bool is_valid_user(string username, string password)
+        {
+            return username == "realiti" && password == "karakara";
+        }
+
+        private string generate_token(string username)
+        {
+            var security_key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(security_key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, username)
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(_token_expiration),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
