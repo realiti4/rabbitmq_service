@@ -10,8 +10,8 @@ namespace background_service
     class MessageData
     {
         public required string message { get; set; }
-        public required string messageType { get; set; }
-        public required int messageID { get; set; }
+        public required string message_type { get; set; }
+        public required int message_id { get; set; }
     }
 
     public class ConsumerWorker : BackgroundService, IDisposable
@@ -84,7 +84,7 @@ namespace background_service
                     // TODO Handle number of retries here
 
                     _logger.LogError(ex, "Error occurred while processing message");
-                    _channel.BasicReject(ea.DeliveryTag, requeue: true);
+                    _channel.BasicReject(ea.DeliveryTag, requeue: false);
                 }
             };
 
