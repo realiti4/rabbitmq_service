@@ -174,7 +174,7 @@ namespace background_service.Controllers
 
         private bool is_valid_user(string username, string password)
         {
-            return username == "realiti" && password == "karakara";
+            return username == "admin" && password == "admin";
         }
 
         private string generate_token(string username)
