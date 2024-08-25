@@ -30,7 +30,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Add authorization
 builder.Services.AddAuthorization();
 
-builder.Services.AddHostedService<Worker>();
 builder.Services.AddHostedService<ConsumerWorker>();
 
 // Add services for controllers

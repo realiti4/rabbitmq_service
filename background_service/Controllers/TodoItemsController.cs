@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace background_service.Controllers
 {
@@ -30,21 +31,6 @@ namespace background_service.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
-            List<int> test = new List<int>() { 1, 2, 3, 4, 5 };
-
-            IEnumerable<int> numberList = Enumerable.Range(1, 10);
-
-            var test3 = numberList.Where(x => x % 2 == 0)
-                .Select(x => x * 2);
-
-            var test2 = test.Where(x => x >= 4)
-                .Select(x => x * 2);
-
-            foreach (var item in test2)
-            {
-                Console.WriteLine(item);
-            }
-
             return await _context.TodoItems.ToListAsync();
         }
 
@@ -120,27 +106,29 @@ namespace background_service.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpGet("dev")]
+        public void Dev()
+        {
+            List<int> test = new List<int>() { 1, 2, 3, 4, 5 };
+
+            IEnumerable<int> numberList = Enumerable.Range(1, 10);
+
+            var test3 = numberList.Where(x => x % 2 == 0)
+                .Select(x => x * 2);
+
+            var test2 = test.Where(x => x >= 4)
+                .Select(x => x * 2);
+
+            foreach (var item in test2)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
         private bool TodoItemExists(long id)
         {
             return _context.TodoItems.Any(e => e.Id == id);
-        }
-    }
-
-    // Print hello controller
-    [Route("api/[controller]")]
-    [ApiController]
-    public class HelloController : ControllerBase
-    {
-        [HttpGet]
-        public string Get()
-        {
-            return "Hello World!";
-        }
-
-        [HttpGet("test/haha")]
-        public string Get2()
-        {
-            return "Hello World from get2!";
         }
     }
 
